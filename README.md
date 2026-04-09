@@ -1,134 +1,68 @@
 [![Claude Code Projects Index](https://img.shields.io/badge/Claude%20Code-Projects%20Index-blue?style=flat-square&logo=github)](https://github.com/danielrosehill/Claude-Code-Repos-Index)
 
-> **See also**: [Open Research Workspace](https://github.com/danielrosehill/Claude-Research-Space-Public-Template) — a variant of this template designed for public/open-source research (adds export commands, publishing integrations, and public-audience formatting).
-
 # Github-Repo-Org-Question
 
-Research workspace for investigating approaches to organising a large collection of personal GitHub repositories — structure, indexing, tagging, and ongoing maintenance strategies.
+An **ongoing research notebook** investigating how to manage a large personal GitHub repo fleet — organisation, navigation, multi-machine sync, bulk lifecycle ops, and launcher UX. Not a one-shot research project: this is a living document that gets picked up whenever a new angle, tool, or pain point surfaces.
 
-Built on Daniel's Claude Research Workspace template: iterative AI-assisted research with Claude Code as the execution engine.
+Built on Daniel's Claude Research Workspace template — iterative AI-assisted research with Claude Code as the execution engine.
 
-## Concept
+## What this notebook is trying to answer
 
-This repository is a **structured research workspace** — not a traditional codebase. It uses a folder-based pattern where:
+> *"How do I manage hundreds of personal GitHub repos across multiple machines without wasting time on navigation, losing work to sync accidents, or fighting the filesystem every time folders get reorganised?"*
 
-- **Context** folders hold background information and compacted history
-- **Prompt** folders manage the research queue
-- **Output** folders capture and aggregate findings
-- A **compaction loop** feeds previous findings back as context for deeper investigation
+Full pain-point list and learned requirements live in [`SCOPE.md`](SCOPE.md). Read that first if you're resuming work.
 
-The filesystem acts as both the workflow engine and the knowledge base. No databases, no vector stores, no complex tooling — just folders, markdown files, and Claude Code.
+## Current state
 
-## Getting Started
+- **Architecture settled** (09/04/26): five-layer stack keyed on `git remote get-url origin`, not filesystem paths. Synthesis in [`outputs/final/2026-04-09-repo-management-synthesis.md`](outputs/final/2026-04-09-repo-management-synthesis.md).
+- **Implementation brief** ready for a downstream agent: [`outputs/final/2026-04-09-implementation-agent-prompt.md`](outputs/final/2026-04-09-implementation-agent-prompt.md).
+- **Printable PDF** of the synthesis: [`outputs/aggregated/pdf/synthesis.pdf`](outputs/aggregated/pdf/synthesis.pdf).
 
-### 1. Fork or use as template
+## Resuming work
 
-Click **Use this template** on GitHub, or fork and clone.
-
-### 2. Set up your research topic
-
-Edit `context/from-human/research-brief.md` with your research topic, scope, and any background information.
-
-### 3. Write your first prompt
-
-Create a prompt in `prompts/run/initial/` describing what you want to investigate. See `prompts/run/initial/example-initial-prompt.md` for the format.
-
-### 4. Run it
-
-Open the repo in Claude Code and tell it to run the prompt:
+Open the repo in Claude Code and run:
 
 ```
-Run the prompt in prompts/run/initial/
+/resume
 ```
 
-### 5. Iterate
+That reads `SCOPE.md`, the latest `outputs/final/`, and the most recent individual outputs, then either continues from where the last iteration left off or lets you drop a new question into the queue. To evaluate a specific tool against the spec instead, run `/resume evaluate <tool>`.
 
-Review the output in `outputs/individual/`, write follow-up prompts in `prompts/run/subsequent/`, and keep going. When context grows large, ask Claude to compact.
-
-## Directory Structure
+## Directory structure
 
 ```
-├── CLAUDE.md                    # System instructions for Claude Code
+├── CLAUDE.md                    # Instructions for Claude Code
+├── SCOPE.md                     # Live spec: pain points + requirements (READ FIRST)
 ├── context/
-│   ├── from-human/              # Your background info and notes
+│   ├── from-human/              # Background info and notes
 │   ├── from-history/            # Compacted findings from prior iterations
-│   └── from-internet/           # Saved web sources and references
-├── prompts/
-│   ├── drafting/                # Prompts under development
-│   ├── queue/                   # Ready to run (ordered)
-│   └── run/
-│       ├── initial/             # First-pass research prompts
-│       └── subsequent/          # Follow-up prompts
+│   └── from-internet/           # Saved web sources
+├── prompts/run/{initial,subsequent}/   # Prompts, in execution order
 ├── outputs/
 │   ├── individual/              # Per-prompt research outputs
-│   ├── aggregated/
-│   │   ├── markdown/            # Combined research documents
-│   │   └── pdf/                 # PDF exports
-│   └── final/                   # Polished deliverables
-├── slash-commands/              # Custom Claude Code slash commands
-└── notes/                       # Working notes and methodology
+│   ├── aggregated/{markdown,pdf}/
+│   └── final/                   # Synthesis + implementation briefs
+├── slash-commands/              # Custom Claude Code commands
+└── notes/
 ```
 
-## Workflow
-
-```
- ┌─────────────┐
- │   Context    │◄──────────────────────┐
- │  (from-human │                       │
- │  from-history│                       │
- │  from-internet)                      │
- └──────┬──────┘                        │
-        │                               │
-        ▼                               │
- ┌─────────────┐                        │
- │   Prompt     │                       │
- │  (queue/run) │                       │
- └──────┬──────┘                        │
-        │                               │
-        ▼                               │
- ┌─────────────┐      ┌────────────┐    │
- │   Claude     │─────►│  Output    │    │
- │   Code       │      │ (individual)   │
- └─────────────┘      └──────┬─────┘    │
-                             │          │
-                     ┌───────┴───────┐  │
-                     │  Compaction   │──┘
-                     │  (summarise   │
-                     │   → history)  │
-                     └───────┬───────┘
-                             │
-                             ▼
-                      ┌────────────┐
-                      │ Aggregation│
-                      │ (combined  │
-                      │  markdown/ │
-                      │  pdf)      │
-                      └────────────┘
-```
-
-## Slash Commands
+## Slash commands
 
 | Command | Purpose |
-|---------|---------|
+|---|---|
+| `/resume` | Pick up from the last iteration, or evaluate a specific tool against `SCOPE.md` |
 | `/run-prompt` | Execute the next prompt in the queue |
-| `/compact` | Summarise outputs into compacted history |
+| `/compact` | Summarise individual outputs into compacted history |
 | `/aggregate` | Combine individual outputs into a single document |
-| `/status` | Show research progress (prompts run, outputs generated, queue length) |
+| `/status` | Show research progress |
 
-## Spinning Up a New Research Project
+## Design philosophy
 
-1. Use this repo as a GitHub template
-2. Replace `context/from-human/research-brief.md` with your topic
-3. Clear the example prompts and outputs
-4. Start researching
-
-## Design Philosophy
-
-- **Filesystem as workflow engine**: Folder structure defines the process
-- **Markdown-native**: Everything is plain text, version-controlled, portable
-- **Compaction over RAG**: Summarise and feed back rather than vectorise
-- **Iterative deepening**: Each round builds on compacted findings from the last
-- **No infrastructure required**: Just Claude Code and a git repo
+- **Filesystem as workflow engine** — folder structure defines the process
+- **Markdown-native** — plain text, version-controlled, portable
+- **Compaction over RAG** — summarise and feed back rather than vectorise
+- **Iterative deepening** — each round builds on the last
+- **Living spec** — `SCOPE.md` is updated every iteration as new pain points and requirements emerge
 
 ## License
 
@@ -136,4 +70,4 @@ MIT
 
 ---
 
-For more Claude Code projects, visit my [Claude Code Projects Index](https://github.com/danielrosehill/Claude-Code-Repos-Index).
+For more Claude Code projects, see the [Claude Code Projects Index](https://github.com/danielrosehill/Claude-Code-Repos-Index).
