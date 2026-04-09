@@ -2,7 +2,7 @@
 
 Living spec for this research notebook. Updated as new pain points surface and as research rules options in or out. Read this before resuming work.
 
-Last updated: 09/04/26
+Last updated: 09/04/26 (added OS: Ubuntu 25.10 / KDE Plasma 6 Wayland)
 
 ## The question
 
@@ -11,6 +11,7 @@ How does a single heavy user manage hundreds of personal GitHub repos across mul
 ## User context
 
 - **Volume:** hundreds of personal repos under `~/repos/github/`, growing continuously
+- **OS:** Ubuntu 25.10 with KDE Plasma 6 on Wayland (both machines)
 - **Machines:** desktop (80% of work) + laptop (20%, occasional)
 - **Default clone tool:** GitKraken, clones into `~/repos/github/` by default
 - **File manager:** Dolphin on KDE Plasma 6 (Wayland)
